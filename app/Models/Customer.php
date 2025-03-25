@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
     /**
      * fillable
@@ -16,5 +16,14 @@ class Customer extends Model
         'name',
         'email',
         'password'
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
     ];
 }

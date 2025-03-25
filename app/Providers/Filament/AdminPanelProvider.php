@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers\Filament;
-
+use App\Filament\Widgets\TransactionChart;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -41,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
+                TransactionChart::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([

@@ -31,7 +31,7 @@ class Login extends Component
     {
         // redirect if user is already logged in
         if (auth()->guard('customer')->check()) {
-            return $this->redirect('/account/my-orders', navigate: true);
+            return $this->redirect('/account/my-profile', navigate: true);
         }
     }
 
@@ -56,7 +56,7 @@ class Login extends Component
             session()->flash('success', 'Login Berhasil');
 
             // redirect to the desired page
-            return $this->redirect('/account/my-orders', navigate: true);
+            return $this->redirect('/account/my-profile', navigate: true);
         }
 
         // flash error message if login fails

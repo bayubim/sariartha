@@ -1,6 +1,6 @@
 <div class="container">
 
-    <div class="row justify-content-center mt-0" style="margin-bottom: 150px;">
+    <div class="row justify-content-center mt-0" style="margin-bottom: 150px; margin-top: 50px !important;">
         <div class="col-md-6">
 
             <x-menus.customer />
@@ -50,6 +50,14 @@
                                             <button class="btn btn-sm btn-danger rounded border-0">
                                                 <i class="fa fa-times-circle"></i> {{ $transaction->status }}
                                             </button>
+                                        @elseif($transaction->status == 'process')
+                                            <button class="btn btn-sm btn-info rounded border-0">
+                                                <i class="fa fa-times-circle"></i> {{ $transaction->status }}
+                                            </button>
+                                        @elseif($transaction->status == 'delivery')
+                                            <button class="btn btn-sm btn-success rounded border-0">
+                                                <i class="fa fa-times-circle"></i> {{ $transaction->status }}
+                                            </button>
                                         @endif
                                     </td>
                                 </tr>
@@ -61,7 +69,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     <h6 class="mt-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
                             class="bi bi-truck mb-1" viewBox="0 0 16 16">
@@ -75,21 +82,34 @@
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
-                                <tr>
-                                    <td style="width: 25%;">Courier</td>
-                                    <td style="width: 5%;">:</td>
-                                    <td>{{ strtoupper($transaction->shipping->shipping_courier) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Service</td>
-                                    <td>:</td>
-                                    <td>{{ strtoupper($transaction->shipping->shipping_service) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Cost</td>
-                                    <td>:</td>
-                                    <td>Rp. {{ number_format($transaction->shipping->shipping_cost) }}</td>
-                                </tr>
+                                @if(strtolower($transaction->shipping->shipping_courier) === 'pickup')
+                                    <tr>
+                                        <td style="width: 25%;">Metode</td>
+                                        <td style="width: 5%;">:</td>
+                                        <td>Ambil di Tempat</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Biaya</td>
+                                        <td>:</td>
+                                        <td>Gratis</td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td style="width: 25%;">Courier</td>
+                                        <td style="width: 5%;">:</td>
+                                        <td>{{ strtoupper($transaction->shipping->shipping_courier) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Service</td>
+                                        <td>:</td>
+                                        <td>{{ strtoupper($transaction->shipping->shipping_service) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cost</td>
+                                        <td>:</td>
+                                        <td>Rp. {{ number_format($transaction->shipping->shipping_cost) }}</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -161,6 +181,8 @@
 
         </div>
     </div>
+
+
 
 </div>
 

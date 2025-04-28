@@ -24,9 +24,11 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+
             ->plugins([
                 FilamentApexChartsPlugin::make(),
             ])
+
             ->default()
             ->id('admin')
             ->path('admin')
@@ -45,7 +47,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                // TransactionChart::class,
+                \App\Filament\Widgets\TransactionChart::class,
+                \App\Filament\Widgets\CityChart::class,
                 // Widgets\AccountWidget::class,
 
                 // Widgets\FilamentInfoWidget::class,

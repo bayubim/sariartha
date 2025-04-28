@@ -9,6 +9,7 @@ class Register extends Component
 {
     public $name;
     public $email;
+    public $phone;
     public $password;
     public $password_confirmation;
 
@@ -21,6 +22,7 @@ class Register extends Component
     {
         return [
             'name' => ['required'],
+            'phone' => ['required', 'unique:customers,phone'],
             'email' => ['required', 'email', 'unique:customers,email'],
             'password' => ['required', 'confirmed'],
         ];
@@ -35,7 +37,7 @@ class Register extends Component
     {
         // redirect if user is already logged in
         if (auth()->guard('customer')->check()) {
-            return $this->redirect('/account/my-orders', navigate: true);
+            return $this->redirect('/account/my-profile', navigate: true);
         }
     }
 
@@ -52,6 +54,7 @@ class Register extends Component
         //create customer
         Customer::create([
             'name' => $this->name,
+            'phone' => $this->phone,
             'email' => $this->email,
             'password' => bcrypt($this->password),
         ]);

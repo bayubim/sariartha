@@ -14,6 +14,7 @@ class ProductChart extends ApexChartWidget
 {
     protected static ?string $chartId = 'productSalesChart';
     protected static ?string $heading = 'Grafik Penjualan Produk';
+    protected static ?int $sort = 2;
     protected int|string|array $columnSpan = '1';
 
     protected function getOptions(): array

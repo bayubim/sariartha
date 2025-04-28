@@ -1,56 +1,50 @@
-<div class="container">
+<div class="container min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4 fw-bold" style="color: #5dade2;">Welcome Back</h3>
+                <p class="text-muted text-center mb-4">Login to your account</p>
 
-    <div class="row justify-content-center mt-0">
-        <div class="col-md-6">
-            <div class="bg-white rounded-bottom-custom shadow-sm p-3 sticky-top mb-5">
-                <div class="d-flex justify-content-start">
-                    <div>
-                        <x-buttons.back />
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 shadow-sm rounded mt-80">
-                <div class="card-body p-5">
-                    <h5 class="text-muted text-center mb-4">Login to your Account</h5>
-                    <form wire:submit.prevent="login">
-
-                        <div class="input-group mb-3">
+                <form wire:submit.prevent="login">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-envelope"></i></span>
                             <input type="email" wire:model.blur="email" value="{{ old('email') }}"
-                                class="form-control rounded @error('email') is-invalid @enderror"
-                                placeholder="Email Address">
+                                class="form-control border-start-0 @error('email') is-invalid @enderror"
+                                placeholder="you@example.com">
                         </div>
                         @error('email')
-                            <div class="alert alert-danger mt-2 rounded border-0">
-                                {{ $message }}
-                            </div>
+                            <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
+                    </div>
 
-                        <div class="input-group mb-3">
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-lock"></i></span>
                             <input type="password" wire:model.blur="password"
-                                class="form-control rounded @error('password') is-invalid @enderror"
-                                placeholder="Password">
+                                class="form-control border-start-0 @error('password') is-invalid @enderror"
+                                placeholder="••••••••">
                         </div>
-
                         @error('password')
-                            <div class="alert alert-danger mt-2 rounded border-0">
-                                {{ $message }}
-                            </div>
+                            <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
+                    </div>
 
-                        <button class="btn btn-orange-2 w-100 rounded" type="submit">Sign In</button>
-                    </form>
+                    <button class="btn w-100 rounded-pill fw-semibold text-white" type="submit"
+                        style="background-color: #5dade2;">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted">Don't have an account?</span>
+                    <a href="/register" class="fw-bold text-decoration-none ms-1" style="color: #5dade2;" wire:navigate>
+                        Sign Up
+                    </a>
                 </div>
             </div>
-
-            <div class="mt-4">
-                <div class="text-center">
-                    <span>Don't have an account?</span>
-                    <a href="/register" class="text-decoration-none fw-bold text-orange ms-2" wire:navigate>Sign Up</a>
-                </div>
-            </div>
-
         </div>
     </div>
-
 </div>

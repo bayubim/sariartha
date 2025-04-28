@@ -13,6 +13,7 @@ class TransactionChart extends ApexChartWidget
 {
     protected static ?string $chartId = 'transactionChart';
     protected static ?string $heading = 'Grafik Transaksi';
+    protected static ?int $sort = 2;
     protected int|string|array $columnSpan = '1';
     // protected static ?string $footer = 'Tanggal';
 
@@ -27,7 +28,12 @@ class TransactionChart extends ApexChartWidget
 
         // Ambil data transaksi sukses dalam rentang waktu yang dipilih
         $data = Trend::query(
-                    Transaction::where('status', 'success')
+
+                    Transaction::query() // Memanggil query() di model Transaction
+                        ->whereIn('status', ['success', 'delivery'])
+                    // Filter transaksi dengan status 'success'
+
+                    // Transaction::where('status', 'success')
                 )
                     ->between(start: $startDate, end: $endDate)
             ->{$isOneMonth ? 'perDay' : 'perMonth'}()

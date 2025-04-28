@@ -1,13 +1,13 @@
 @section('title')
-Carts - Eat Your Favorite Foods
+Sariartha Kue
 @stop
 
 @section('keywords')
-Food Store, Eat Your Favorite Foods
+Sariartha Kue
 @stop
 
 @section('description')
-Food Store - Eat Your Favorite Foods
+Sariartha Kue
 @stop
 
 @section('image')
@@ -17,15 +17,15 @@ Food Store - Eat Your Favorite Foods
 <div>
 
     <div class="container">
-        <div class="row justify-content-center mt-0" style="margin-bottom: 270px;">
+        <div class="row justify-content-center mt-0" style="margin-bottom: 270px; margin-top:150px !important">
             <div class="col-md-6">
-                <div class="bg-white rounded-bottom-custom shadow-sm p-3 sticky-top mb-5">
+                <!-- <div class="bg-white rounded-bottom-custom shadow-sm p-3 sticky-top mb-5">
                     <div class="d-flex justify-content-start">
                         <div>
                             <x-buttons.back />
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="row">
 

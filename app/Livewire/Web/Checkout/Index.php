@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Web\Checkout;
 
 use App\Models\Cart;
@@ -17,81 +16,84 @@ class Index extends Component
     public $showCost = false;
     public $costs;
 
-    public $selectCourier = '';
-    public $selectService = '';
-    public $selectCost = 0;
-
-    public $grandTotal = 0;
+    public $selectCourier = ''; // Selected Courier (JNE, POS, TIKI)
+    public $selectService = ''; // Selected Service
+    public $selectCost = 0; // Shipping cost
+    public $grandTotal = 0; // Grand total price including shipping
+    public $selectedCourier;
+    public $courierOption = false;
+    public $pickupOption = false; // Opsi ambil di tempat
 
     /**
-     * getCartsData
+     * Change the selected courier or pickup option.
      *
+     * @param string $courier
      * @return void
+     */
+    public function changeCourier($courier)
+    {
+        $this->selectedCourier = $courier;
+
+        if ($courier == 'pickup') {
+            // Set opsi pengiriman menjadi 'Ambil di Tempat'
+            $this->pickupOption = true;
+            $this->selectCourier = ''; // Reset selected courier
+        } else {
+            // Set opsi pengiriman menjadi kirim dengan kurir
+            $this->pickupOption = false;
+            $this->selectCourier = $courier; // Set selected courier
+        }
+
+        // Perbarui biaya pengiriman jika diperlukan
+        $this->CheckOngkir();
+    }
+
+    /**
+     * Get cart data including total weight and total price.
+     *
+     * @return array
      */
     public function getCartsData()
     {
-        //get carts by customer
         $carts = Cart::query()
             ->with('product')
             ->where('customer_id', auth()->guard('customer')->user()->id)
             ->latest()
             ->get();
 
-        // Menghitung total berat
         $totalWeight = $carts->sum(function ($cart) {
             return $cart->product->weight * $cart->qty;
         });
 
-        // Menghitung total harga
         $totalPrice = $carts->sum(function ($cart) {
             return $cart->product->price * $cart->qty;
         });
 
-        // Return as an array
         return [
             'totalWeight' => $totalWeight,
             'totalPrice' => $totalPrice,
         ];
     }
 
-
     /**
-     * changeCourier
-     *
-     * @param  mixed $value
-     * @return void
-     */
-    public function changeCourier($value)
-    {
-        if (!empty($value)) {
-
-            //set courier
-            $this->selectCourier = $value;
-
-            //set loading
-            $this->loading = true;
-
-            //set show cost false
-            $this->showCost = false;
-
-            //call method CheckOngkir
-            $this->CheckOngkir();
-        }
-    }
-
-    /**
-     * Ongkir function: calculate shipping cost or any logic.
+     * Calculate shipping cost using the RajaOngkir API.
      *
      * @return void
      */
     public function CheckOngkir()
     {
         try {
+            // Jika opsi ambil di tempat dipilih, set biaya 0 dan langsung keluar dari fungsi
+            if ($this->pickupOption) {
+                $this->costs = []; // Kosongkan biaya ongkir
+                $this->selectCost = 0;
+                return;
+            }
 
             // Ambil data cart
             $cartData = $this->getCartsData();
 
-            // Fetch Rest API
+            // Fetch data from RajaOngkir API
             $response = Http::withHeaders([
                 'key' => config('rajaongkir.api_key')
             ])->post('https://api.rajaongkir.com/starter/cost', [
@@ -101,22 +103,25 @@ class Index extends Component
                         'courier' => $this->selectCourier,
                     ]);
 
-            // Process costs (optional: store in a variable)
-            $this->costs = $response['rajaongkir']['results'][0]['costs'];
+            // Check if response is valid
+            if ($response->successful()) {
+                $this->costs = $response['rajaongkir']['results'][0]['costs'];
+            } else {
+                $this->costs = []; // Reset if API request fails
+            }
         } catch (\Exception $e) {
-            // Handle error (optional: set an error message)
             session()->flash('error', 'Gagal mengambil ongkir.');
+            $this->costs = [];
         } finally {
-            // Always update loading and cost visibility
             $this->loading = false;
             $this->showCost = true;
         }
     }
 
     /**
-     * getServiceAndCost
+     * Set the selected shipping service and cost.
      *
-     * @param  mixed $data
+     * @param string $data
      * @return void
      */
     public function getServiceAndCost($data)
@@ -135,12 +140,32 @@ class Index extends Component
         $this->grandTotal = $cartData['totalPrice'] + $this->selectCost;
     }
 
+    /**
+     * Toggle Pickup Option (Ambil di Tempat).
+     *
+     * @return void
+     */
+    public function togglePickupOption()
+    {
+        $this->pickupOption = !$this->pickupOption;
+        if ($this->pickupOption) {
+            // Set biaya 0 jika opsi ambil di tempat dipilih
+            $this->selectCost = 0;
+            $this->grandTotal = $this->getCartsData()['totalPrice'];
+        } else {
+            // Reset cost jika opsi ambil di tempat dibatalkan
+            $this->CheckOngkir();
+        }
+    }
+
+    /**
+     * Render the checkout page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function render()
     {
-        //get provinces
         $provinces = Province::query()->get();
-
-        //get total cart price
         $cartData = $this->getCartsData();
         $totalPrice = $cartData['totalPrice'];
         $totalWeight = $cartData['totalWeight'];

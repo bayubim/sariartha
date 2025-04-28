@@ -12,6 +12,7 @@ class Index extends Component
 
     public $image;
     public $name;
+    public $phone;
     public $email;
 
     /**
@@ -35,6 +36,7 @@ class Index extends Component
         return [
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'name' => 'required',
+            'phone' => 'required|unique:customers,phone,' . auth()->guard('customer')->user()->id,
             'email' => 'required|email|unique:customers,email,' . auth()->guard('customer')->user()->id,
         ];
     }
@@ -54,6 +56,7 @@ class Index extends Component
             $profile = Customer::findOrFail(auth()->guard('customer')->user()->id);
             $profile->update([
                 'name' => $this->name,
+                'phone' => $this->phone,
                 'email' => $this->email,
                 'image' => $imageName,
             ]);

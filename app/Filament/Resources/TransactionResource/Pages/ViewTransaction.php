@@ -30,6 +30,8 @@ class ViewTransaction extends ViewRecord
                             'success' => 'success',
                             'expired' => 'gray',
                             'failed' => 'danger',
+                            'process' => 'info',
+                            'delivery' => 'success',
                         }),
                     TextEntry::make('created_at')->label('Created At'),
                 ])->columns(3),
@@ -37,6 +39,7 @@ class ViewTransaction extends ViewRecord
                 // Customer Information
                 Card::make([
                     TextEntry::make('customer.name')->label('Customer Name'),
+                    TextEntry::make('customer.phone')->label('Phone Number'),
                     TextEntry::make('customer.email')->label('Email Address'),
                     TextEntry::make('address')->label('Address'),
                 ])->columns(3),

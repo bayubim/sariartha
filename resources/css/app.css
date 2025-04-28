@@ -11,22 +11,22 @@ body {
 
 .rounded-bottom-custom,
 .rounded-start {
-    border-bottom-left-radius: 24px !important
+    border-bottom-left-radius: 10px !important
 }
 
 .rounded-start,
 .rounded-top-custom {
-    border-top-left-radius: 24px !important
+    border-top-left-radius: 10px !important
 }
 
 .rounded-bottom-custom,
 .rounded-end {
-    border-bottom-right-radius: 24px !important
+    border-bottom-right-radius: 10px !important
 }
 
 .rounded-end,
 .rounded-top-custom {
-    border-top-right-radius: 24px !important
+    border-top-right-radius: 10px !important
 }
 
 .h-150 {
@@ -112,7 +112,7 @@ body {
 
 .btn-cart-delete,
 .btn-rating {
-    background-color: #e92715 !important;
+    background-color: #e98a15 !important;
     color: #e9e9f5 !important;
     width: 30px;
     height: 30px;
@@ -178,7 +178,7 @@ body {
 }
 
 .group-btn-qty-2 {
-    background-color: #e94e1547
+    background-color: #41ff37d6
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -188,3 +188,14 @@ input[type=number]::-webkit-outer-spin-button {
     appearance: none;
     margin: 0
 }
+
+#cityChart{
+    width: 30% !important;
+}
+@media (min-width: 992px) {
+    .carousel-item img {
+        height: 60vh;
+        object-fit: cover;
+    }
+}
+

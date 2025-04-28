@@ -20,55 +20,49 @@ class BtnCheckout extends Component
 
     public $totalWeight;
     public $grandTotal;
+    public $pickupOption;
 
     public $response;
     public $loading;
 
-    /**
-     * __construct
-     *
-     * @return void
-     */
     public function __construct()
     {
-        // Set midtrans configuration
+        // Set konfigurasi Midtrans
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         \Midtrans\Config::$isProduction = config('midtrans.is_production');
         \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
         \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
     }
 
-    public function mount($selectCourier = null, $selectService = null, $selectCost = null)
-    {
+    public function mount(
+        $selectCourier = null,
+        $selectService = null,
+        $selectCost = null,
+        $pickupOption = false
+    ) {
         $this->selectCourier = $selectCourier;
         $this->selectService = $selectService;
         $this->selectCost = $selectCost;
+        $this->pickupOption = $pickupOption;
     }
 
-    /**
-     * storeCheckout
-     *
-     * @return void
-     */
     public function storeCheckout()
     {
-        // Set loading
         $this->loading = true;
 
         $customer = auth()->guard('customer')->user();
 
-        // Validasi awal
+        // Validasi dasar
         if (!$customer || !$this->province_id || !$this->city_id || !$this->address || !$this->grandTotal) {
             session()->flash('error', 'Data tidak lengkap. Silakan periksa kembali.');
+            $this->loading = false;
             return;
         }
 
         try {
             DB::transaction(function () use ($customer) {
-                // Buat kode invoice
                 $invoice = 'INV-' . mt_rand(1000, 9999);
 
-                // Buat transaksi
                 $transaction = Transaction::create([
                     'customer_id' => $customer->id,
                     'invoice' => $invoice,
@@ -80,19 +74,21 @@ class BtnCheckout extends Component
                     'status' => 'PENDING',
                 ]);
 
-                // Buat data pengiriman
+                // Tentukan detail pengiriman
+                $shippingCourier = $this->pickupOption ? 'pickup' : $this->selectCourier;
+                $shippingService = $this->pickupOption ? 'Ambil di Tempat' : $this->selectService;
+                $shippingCost = $this->pickupOption ? 0 : $this->selectCost;
+
                 $transaction->shipping()->create([
-                    'shipping_courier' => $this->selectCourier,
-                    'shipping_service' => $this->selectService,
-                    'shipping_cost' => $this->selectCost,
+                    'shipping_courier' => $shippingCourier,
+                    'shipping_service' => $shippingService,
+                    'shipping_cost' => $shippingCost,
                 ]);
 
-                // Detail item
                 $item_details = [];
                 $carts = Cart::where('customer_id', $customer->id)->with('product')->get();
 
                 foreach ($carts as $cart) {
-                    // Tambahkan detail transaksi
                     $transaction->transactionDetails()->create([
                         'product_id' => $cart->product->id,
                         'qty' => $cart->qty,
@@ -107,15 +103,16 @@ class BtnCheckout extends Component
                     ];
                 }
 
-                // Tambahkan ongkos kirim ke item details
-                $item_details[] = [
-                    'id' => 'shipping',
-                    'price' => $this->selectCost,
-                    'quantity' => 1,
-                    'name' => 'Ongkos Kirim: ' . $this->selectCourier . ' - ' . $this->selectService,
-                ];
+                // Tambahkan biaya pengiriman jika bukan pickup
+                if (!$this->pickupOption) {
+                    $item_details[] = [
+                        'id' => 'shipping',
+                        'price' => $this->selectCost,
+                        'quantity' => 1,
+                        'name' => 'Ongkos Kirim: ' . $this->selectCourier . ' - ' . $this->selectService,
+                    ];
+                }
 
-                // Hapus keranjang setelah checkout
                 Cart::where('customer_id', $customer->id)->delete();
 
                 // Payload untuk Midtrans

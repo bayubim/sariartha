@@ -5,7 +5,7 @@ namespace App\Livewire\Web\Home;
 use App\Models\Slider;
 use App\Models\Product;
 use Livewire\Component;
-use App\Models\Category;
+// use App\Models\Category;
 
 class Index extends Component
 {
@@ -16,7 +16,7 @@ class Index extends Component
      */
     protected function getPopularProducts()
     {
-        return Product::with('category', 'ratings.customer')
+        return Product::with('ratings.customer')
             ->withAvg('ratings', 'rating') // Menghitung rata-rata rating
             ->having('ratings_avg_rating', '>=', 4)
             ->limit(5) // Batas jumlah produk
@@ -32,7 +32,7 @@ class Index extends Component
     {
         //get products
         return Product::query()
-            ->with('category', 'ratings.customer')
+            ->with('ratings.customer')
             ->withAvg('ratings', 'rating')
             ->limit(5)
             ->orderBy('created_at', 'desc')
@@ -47,7 +47,7 @@ class Index extends Component
             'sliders' => Slider::latest()->get(),
 
             //get categories
-            'categories' => Category::latest()->get(),
+            // 'categories' => Category::latest()->get(),
 
             //get popular products
             'popularProducts' => $this->getPopularProducts(),

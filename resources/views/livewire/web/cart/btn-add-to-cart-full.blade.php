@@ -1,9 +1,9 @@
-<div class="container fixed-total">
+<div class="container ">
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 mb-5">
             <div class="mt-5">
                 <div class="">
-                    <button wire:click="addToCart({{ $product_id }})" class="btn btn-orange-2 rounded w-100">
+                    <button wire:click="addToCart({{ $product_id }})" class="btn btn-success rounded w-100">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" fill="currentColor"
                             class="bi bi-cart3 mb-2 mt-1" viewBox="0 0 16 16">
                             <path

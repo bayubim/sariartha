@@ -11,7 +11,7 @@ class Index extends Component
     {
         //get products
         $products = Product::query()
-            ->with('category', 'ratings.customer')
+            ->with('ratings.customer')
             ->withAvg('ratings', 'rating')
             ->when(request()->has('search'), function ($query) {
                 $query->where('title', 'like', '%' . request()->search . '%');

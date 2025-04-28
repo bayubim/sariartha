@@ -7,7 +7,7 @@
     <link rel="icon" href="{{ asset('storage/logowhite.png') }}" type="image/x-icon">
     <meta name="description" content="@yield('description')">
     <meta name="keywords" content="@yield('keywords')">
-    <meta name="author" content="Food Store">
+    <meta name="author" content="Sariartha Kue">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
     <meta content="@yield('title')" property="og:title">
@@ -15,6 +15,9 @@
     <meta content="@yield('image')" property="og:image">
     <title>@yield('title')</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     @livewireStyles
     @vite(['resources/css/app.css'])

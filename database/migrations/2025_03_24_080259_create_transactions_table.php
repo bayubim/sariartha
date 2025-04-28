@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->integer('weight');
             $table->text('address');
             $table->decimal('total', 8, 2);
-            $table->enum('status', ['pending', 'success', 'expired', 'failed'])->default('pending');
+            $table->enum('status', ['pending', 'success', 'expired', 'failed', 'process', 'delivery'])->default('pending');
             $table->string('snap_token')->nullable();
             $table->timestamps();
 

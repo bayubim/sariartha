@@ -1,23 +1,23 @@
 @section('title')
-Category: {{ $category->name }} - Eat Your Favorite Foods
+Category: {{ $category->name }} - Sariartha Kue
 @stop
 
 @section('keywords')
-Food Store, Eat Your Favorite Foods
+Sariartha Kue
 @stop
 
 @section('description')
-Food Store - Eat Your Favorite Foods
+Sariartha Kue
 @stop
 
 @section('image')
 {{ asset('/storage/' . $category->image) }}
 @stop
-
+<!-- 
 <div class="container" style="margin-bottom: 150px">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <!-- Judul dan Navigasi -->
+          
             <div class="bg-white rounded-bottom-custom shadow-sm p-3 sticky-top mb-4">
                 <div class="d-flex justify-content-start">
 
@@ -50,4 +50,4 @@ Food Store - Eat Your Favorite Foods
 
         </div>
     </div>
-</div>
+</div> -->

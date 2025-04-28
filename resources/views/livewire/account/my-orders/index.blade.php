@@ -1,89 +1,116 @@
-<div class="container">
-    <div class="row justify-content-center mt-0" style="margin-bottom: 150px;">
-        <div class="col-md-6">
+<div class="container-fluid px-0">
+    <div class="row justify-content-center mt-0" style="margin-top: 50px !important; padding:0 5vw; ">
+        <div class="container-fluid px-3 px-md-5">
 
             <x-menus.customer />
 
             <div class="card border-0 shadow-sm rounded">
                 <div class="card-body p-4">
-                    <h6>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                            class="bi bi-bag mb-1" viewBox="0 0 16 16">
-                            <path
-                                d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
-                        </svg>
-                        My Orders
+                    <h6 class="mb-3 d-flex align-items-center">
+                        <i class="bi bi-bag me-2"></i> My Orders
                     </h6>
                     <hr />
 
                     @forelse ($transactions as $transaction)
-                        <div class="card rounded border mb-3">
-                            <div class="row g-0">
-                                <div class="col-12 col-md-12">
-                                    <a href="{{ route('account.my-orders.show', $transaction->snap_token) }}" wire:navigate
-                                        class="text-decoration-none text-dark">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="mt-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-basket3 mb-1 me-2"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6h1.717L5.07 1.243a.5.5 0 0 1 .686-.172zM3.394 15l-1.48-6h-.97l1.525 6.426a.75.75 0 0 0 .729.574h9.606a.75.75 0 0 0 .73-.574L15.056 9h-.972l-1.479 6z" />
-                                                    </svg>
-                                                    <span class="fw-bold">Order ID #{{ $transaction->invoice }}</span>
+                                        <div class="card rounded border mb-3 shadow-sm">
+                                            <a href="{{ route('account.my-orders.show', $transaction->snap_token) }}" wire:navigate
+                                                class="text-decoration-none text-dark">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bi bi-basket3 me-2 text-primary"></i>
+                                                            <span class="fw-bold">Order ID #{{ $transaction->invoice }}</span>
+                                                        </div>
+                                                        <div>
+                                                            @php
+                                                                $statusClass = [
+                                                                    'pending' => 'warning',
+                                                                    'success' => 'success',
+                                                                    'expired' => 'secondary',
+                                                                    'failed' => 'danger',
+                                                                    'process' => 'info',
+                                                                    'delivery' => 'success',
+                                                                ][$transaction->status] ?? 'dark';
+                                                            @endphp
+                                                            <span
+                                                                class="badge bg-{{ $statusClass }} rounded-pill px-3 py-2 text-uppercase small">
+                                                                {{ $transaction->status }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <hr class="my-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span class="fw-semibold">Grand Total:</span>
+                                                        <span class="fw-bold text-success">Rp.
+                                                            {{ number_format($transaction->total) }}</span>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    @if($transaction->status == 'pending')
-                                                        <button
-                                                            class="btn btn-warning btn-sm rounded shadow-sm border-0">PENDING</button>
-                                                    @elseif($transaction->status == 'success')
-                                                        <button
-                                                            class="btn btn-success btn-sm rounded shadow-sm border-0">SUCCESS</button>
-                                                    @elseif($transaction->status == 'expired')
-                                                        <button class="btn btn-warning btn-sm rounded shadow-sm border-0"
-                                                            disabled>EXPIRED</button>
-                                                    @elseif($transaction->status == 'failed')
-                                                        <button
-                                                            class="btn btn-danger btn-sm rounded shadow-sm border-0">FAILED</button>
-                                                    @endif
-
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="d-flex justify-content-between">
-                                                <div>
-                                                    <span class="fw-bold">Grand Total:</span>
-                                                </div>
-                                                <div>
-                                                    <span class="fw-bold">Rp.
-                                                        {{ number_format($transaction->total) }}</span>
-                                                </div>
-                                            </div>
+                                            </a>
                                         </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
                     @empty
-                        <div class="card rounded border mb-3">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-center">
-                                    <div class="mt-2">
-                                        <span class="fw-bold">You don't have any orders.</span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="alert alert-light text-center shadow-sm mt-4">
+                            <i class="bi bi-info-circle me-2"></i> You don't have any orders.
                         </div>
                     @endforelse
 
-                    <!-- Navigasi Pagination -->
-                    {{ $transactions->links('vendor.pagination.simple-default') }}
-
+                    {{-- Navigasi Pagination --}}
+                    <div class="mt-4">
+                        {{ $transactions->links('vendor.pagination.simple-default') }}
+                    </div>
 
                 </div>
             </div>
 
         </div>
     </div>
+
+    {{-- Footer --}}
+    <footer class="bg-dark text-white pt-5 pb-4 shadow-lg mt-5 w-100" style="padding:0 5vw;">
+        <div class="container-fluid px-4 px-md-5">
+            <div class="row">
+                {{-- Tentang Kami --}}
+                <div class="col-md-4 mb-4">
+                    <h6 class="fw-bold">Tentang Kami</h6>
+                    <p class="small">
+                        Sariartha Kue menyediakan jajanan tradisional Indonesia dengan cita rasa khas dan berkualitas.
+                        Dukung UMKM lokal!
+                    </p>
+                </div>
+
+                {{-- Navigasi dan Kontak --}}
+                <div class="col-md-7 offset-md-1 mb-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <h6 class="fw-bold">Navigasi</h6>
+                            <ul class="list-unstyled small">
+                                <li><a href="/" class="text-decoration-none text-white-50" wire:navigate>Home</a></li>
+                                <li><a href="/products" class="text-decoration-none text-white-50"
+                                        wire:navigate>Produk</a>
+                                </li>
+                                <li><a href="/cart" class="text-decoration-none text-white-50"
+                                        wire:navigate>Keranjang</a>
+                                </li>
+                                <li><a href="/account/my-orders" class="text-decoration-none text-white-50"
+                                        wire:navigate>Pesanan Saya</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold">Kontak Kami</h6>
+                            <ul class="list-unstyled small">
+                                <li><i class="bi bi-geo-alt-fill me-2"></i>Jl. Kue Tradisional No. 88</li>
+                                <li><i class="bi bi-envelope-fill me-2"></i>info@sariartha.com</li>
+                                <li><i class="bi bi-phone-fill me-2"></i>+62 812 3456 7890</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-light">
+
+            <div class="text-center small text-white-50">
+                &copy; {{ date('Y') }} Sariartha Kue. All rights reserved.
+            </div>
+        </div>
+    </footer>
 </div>

@@ -48,10 +48,10 @@ class ProductResource extends Resource
                         Forms\Components\Grid::make(3)->schema([
 
                             //category
-                            Forms\Components\Select::make('category_id')
-                                ->label('Category')
-                                ->relationship('category', 'name')
-                                ->required(),
+                            // Forms\Components\Select::make('category_id')
+                            //     ->label('Category')
+                            //     ->relationship('category', 'name')
+                            //     ->required(),
 
                             //price
                             Forms\Components\TextInput::make('price')
@@ -82,7 +82,7 @@ class ProductResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')->circular(),
                 Tables\Columns\TextColumn::make('title')->searchable(),
-                Tables\Columns\TextColumn::make('category.name')->searchable(),
+
                 Tables\Columns\TextColumn::make('price')->numeric(decimalPlaces: 0)->money('IDR', locale: 'id'),
                 Tables\Columns\TextColumn::make('description')->html()->limit(50),
             ])
